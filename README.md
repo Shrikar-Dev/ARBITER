@@ -5,6 +5,17 @@
 
 ---
 
+## 🌐 Live Production Deployments
+
+| Component | Service | URL |
+|---|---|---|
+| **Frontend Dashboard & Landing** | Vercel | Connected to GitHub (`Shrikar-Dev/ARBITER`) |
+| **Backend API** | Render | `https://arbiter-07wj.onrender.com` |
+| **API Documentation (Swagger)** | Render | `https://arbiter-07wj.onrender.com/docs` |
+| **Database** | Supabase | PostgreSQL Engine |
+
+---
+
 ## 🌟 Overview
 
 **Arbiter** is an intelligent payment failure recovery system built to solve payment drops in e-commerce and subscription platforms. Instead of relying solely on static rules or blindly retrying every failed transaction, Arbiter evaluates every failed payment using both a **deterministic Rules Engine** and a **contextual AI Reasoning Agent** side-by-side.
@@ -37,7 +48,7 @@ When a payment fails (via live Razorpay Webhooks or synthetic events), Arbiter:
                                             │
                                             ▼
 ┌────────────────────────┐      ┌─────────────────────────┐      ┌────────────────────────┐
-│  Next.js 15 Dashboard  │ ──── │     FastAPI Backend     │ ──── │  Supabase PostgreSQL   │
+│   Vercel Next.js 15    │ ──── │     Render FastAPI      │ ──── │  Supabase PostgreSQL   │
 │ (Glassmorphic + Nippo) │      │  (Python + Uvicorn)     │      │   + Execution Store    │
 └────────────────────────┘      └────────────┬────────────┘      └────────────────────────┘
                                              │
@@ -49,15 +60,15 @@ When a payment fails (via live Razorpay Webhooks or synthetic events), Arbiter:
 
 | Layer | Technology |
 |---|---|
-| **Frontend** | Next.js 15 (App Router), TypeScript, Tailwind CSS, Local Font Optimization |
-| **Backend** | FastAPI (Python 3.11+), Uvicorn, Pydantic |
+| **Frontend Host** | Vercel (Next.js 15 App Router, TypeScript, Tailwind CSS) |
+| **Backend Host** | Render (FastAPI Python 3.11+, Uvicorn, Pydantic) |
 | **Database** | PostgreSQL via Supabase + Local JSON Execution Store Fallback |
 | **Payments** | Razorpay REST API (Payment Links & Webhooks) |
 | **AI Agent** | Google Gemini API / Anthropic Claude API |
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Getting Started (Local Development)
 
 ### Prerequisites
 
@@ -89,7 +100,10 @@ GEMINI_API_KEY=your_gemini_api_key
 #### Frontend (`frontend/.env.local`)
 Copy `frontend/.env.local.example` to `frontend/.env.local`:
 ```env
-NEXT_PUBLIC_API_URL=http://localhost:8000
+# Production: Point to live Render backend
+NEXT_PUBLIC_API_URL=https://arbiter-07wj.onrender.com
+
+# Supabase Public Keys
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_xxxxxxxxx
 ```
@@ -116,7 +130,7 @@ pip install -r requirements.txt
 # Run FastAPI server
 uvicorn main:app --host 127.0.0.1 --port 8000 --reload
 ```
-API Documentation will be available at `http://localhost:8000/docs`.
+API Documentation will be available locally at `http://localhost:8000/docs`.
 
 ---
 
@@ -157,4 +171,4 @@ Dashboard will be live at `http://localhost:3000/dashboard` and Landing Page at 
 
 ## 🛡️ License
 
-MIT License. Designed and developed for **Arbiter**.
+MIT License. Designed and developed for **ARBITER**.
