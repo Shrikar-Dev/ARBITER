@@ -1,0 +1,221 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Google Fonts ─────────────────────────────────────────────────────────── */
+/* Poppins → ALL text on both landing page and dashboard (one product font)  */
+/* JetBrains Mono → timestamps, IDs, code-style values                       */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap");
+
+/* ── Custom Font: Kola (for Arbiter project logo text) ───────────────────── */
+@font-face {
+  font-family: 'Kola';
+  src: url('/fonts/kola/Kola-Regular.woff2') format('woff2'),
+       url('/fonts/kola/Kola-Regular.woff') format('woff'),
+       url('/fonts/kola/Kola-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ── Color system ─────────────────────────────────────────────────────────── */
+:root {
+  /* Surfaces */
+  --color-bg-base:    0 0 0;            /* #000000 — pitch black */
+  --color-bg-raised:  10 10 10;         /* cards behind glass */
+  --color-bg-sunken:  5  5  5;
+
+  /* Content */
+  --color-content-primary:   245 245 245; /* #f5f5f5 */
+  --color-content-secondary: 163 163 163; /* #a3a3a3 */
+  --color-content-muted:     115 115 115; /* #737373 */
+
+  /* Accent — warm orange */
+  --color-accent:       251 146 60;    /* orange-400 — slightly brighter than before */
+  --color-accent-dim:   234 88  12;
+  --color-accent-muted: 251 146 60;
+
+  /* Semantic */
+  --color-success: 74  198 130;
+  --color-warning: 251 146 60;
+  --color-danger:  239 68  68;
+
+  /* Glass system */
+  --glass-bg:        rgba(255, 255, 255, 0.03);
+  --glass-bg-strong: rgba(255, 255, 255, 0.055);
+  --glass-border:    rgba(255, 255, 255, 0.08);
+  --glass-border-strong: rgba(255, 255, 255, 0.11);
+
+  /* Neomorphic — landing page ONLY */
+  --neo-dark:  rgba(0, 0, 0, 0.75);
+  --neo-light: rgba(255, 255, 255, 0.055);
+  --neo-accent-glow: rgba(251, 146, 60, 0.15);
+}
+
+/* ── Base ──────────────────────────────────────────────────────────────────── */
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    font-family: 'Poppins', system-ui, sans-serif;
+    @apply bg-bg-base text-content-primary;
+    min-height: 100dvh;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: 'Poppins', sans-serif;
+  }
+
+  ::selection {
+    background-color: rgb(var(--color-accent) / 0.28);
+    color: #ffffff;
+  }
+
+  ::-webkit-scrollbar        { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track  { background: #000; }
+  ::-webkit-scrollbar-thumb  { background: rgba(255,255,255,0.1); border-radius: 99px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+  :focus-visible {
+    outline: 2px solid rgba(251,146,60,0.7);
+    outline-offset: 2px;
+  }
+}
+
+/* ── Glass panel system ────────────────────────────────────────────────────── */
+@layer components {
+
+  /* Standard — secondary cards, comparison cards, glass buttons */
+  .glass-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  }
+
+  /* Strong — primary stat cards, main table container */
+  .glass-panel-strong {
+    background: var(--glass-bg-strong);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border-strong);
+    border-radius: 18px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  }
+
+  /* AI card variant — orange-tinted border glow */
+  .glass-panel-ai {
+    background: var(--glass-bg);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(251, 146, 60, 0.28);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 24px rgba(251, 146, 60, 0.07);
+  }
+
+  /* Danger tint */
+  .glass-panel-danger {
+    background: rgba(239, 68, 68, 0.07);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(239, 68, 68, 0.22);
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  }
+
+  /* Header */
+  .glass-header {
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.04);
+  }
+
+  /* ── Buttons ── */
+
+  /* Primary CTA — solid orange, NOT glass */
+  .btn-primary {
+    font-family: inherit;
+    background: rgb(251, 146, 60);
+    color: #000000;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: opacity 0.15s ease, transform 0.1s ease;
+  }
+  .btn-primary:hover  { opacity: 0.88; }
+  .btn-primary:active { transform: scale(0.97); }
+  .btn-primary:disabled { opacity: 0.35; cursor: not-allowed; pointer-events: none; }
+
+  /* Secondary — glass treatment */
+  .btn-glass {
+    font-family: inherit;
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(245, 245, 245, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .btn-glass:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.18);
+  }
+  .btn-glass:active { background: rgba(255,255,255,0.03); transform: scale(0.97); }
+  .btn-glass:disabled { opacity: 0.35; cursor: not-allowed; pointer-events: none; }
+
+  /* AI-accent glass button — orange text */
+  .btn-glass-ai {
+    font-family: inherit;
+    background: rgba(251, 146, 60, 0.08);
+    color: rgb(251, 146, 60);
+    border: 1px solid rgba(251, 146, 60, 0.22);
+    border-radius: 10px;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .btn-glass-ai:hover {
+    background: rgba(251, 146, 60, 0.14);
+    border-color: rgba(251, 146, 60, 0.35);
+  }
+  .btn-glass-ai:active { background: rgba(251,146,60,0.04); transform: scale(0.97); }
+  .btn-glass-ai:disabled { opacity: 0.35; cursor: not-allowed; pointer-events: none; }
+
+  /* ── Neomorphic — landing page ONLY ───────────────────────────────────────── */
+  .neo-button-accent {
+    background: linear-gradient(135deg, rgba(251,146,60,0.92), rgba(234,88,12,0.92));
+    box-shadow: 4px 4px 12px rgba(0,0,0,0.8), -3px -3px 10px rgba(255,255,255,0.04), 0 0 14px rgba(251,146,60,0.2);
+    border: none;
+    cursor: pointer;
+    transition: box-shadow 0.12s ease, transform 0.12s ease, opacity 0.12s ease;
+  }
+  .neo-button-accent:hover {
+    box-shadow: 5px 5px 16px rgba(0,0,0,0.85), -3px -3px 10px rgba(255,255,255,0.05), 0 0 22px rgba(251,146,60,0.32);
+    opacity: 0.95;
+  }
+  .neo-button-accent:active {
+    box-shadow: inset 3px 3px 8px rgba(0,0,0,0.7), inset -2px -2px 6px rgba(255,255,255,0.04);
+    transform: scale(0.97);
+  }
+}
+
+/* ── Utilities ─────────────────────────────────────────────────────────────── */
+@layer utilities {
+  .tabular-nums { font-variant-numeric: tabular-nums; }
+  .font-display  { font-family: 'Poppins', sans-serif; }
+  .font-mono-ui  { font-family: 'JetBrains Mono', monospace; }
+}
