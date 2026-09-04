@@ -1,69 +1,126 @@
-# Arbiter
+# ⚡ ARBITER
 
-An AI-powered payment failure recovery agent that classifies Razorpay payment failures in real time, selects the optimal recovery action (retry, delay, suggest alternative method), and measures the revenue impact of the AI-driven approach vs. doing nothing.
+> **Autonomous AI-Powered Payment Failure Recovery Engine**  
+> Classifies payment failures using a side-by-side **Rules Engine** and **AI Reasoning Agent**, autonomously executes optimal recovery actions in Razorpay Test Mode, and tracks revenue recovery in real time.
 
-Arbiter ingests live Razorpay webhooks, runs failures through a classification and recovery pipeline, and surfaces the results in a real-time dashboard so you can see exactly how much revenue the agent is saving.
+---
 
-## Architecture
+## 🌟 Overview
+
+**Arbiter** is an intelligent payment failure recovery system built to solve payment drops in e-commerce and subscription platforms. Instead of relying solely on static rules or blindly retrying every failed transaction, Arbiter evaluates every failed payment using both a **deterministic Rules Engine** and a **contextual AI Reasoning Agent** side-by-side.
+
+When a payment fails (via live Razorpay Webhooks or synthetic events), Arbiter:
+1. **Classifies the Failure**: Categorizes the root cause (e.g., bank gateway timeout, insufficient funds, authentication failure, network drop).
+2. **Evaluates Recovery Strategy**: Compares static policy recommendations against AI contextual reasoning (nuance factors, customer history, time-of-day dynamics).
+3. **Executes Autonomous Actions**: Triggers immediate retries, schedules delayed retries, or generates live **Razorpay Payment Links** (`https://rzp.io/rzp/...`) in Razorpay Test Mode.
+4. **Measures Revenue Recovery**: Calculates exact revenue recovered with Arbiter vs. a zero-recovery baseline.
+
+---
+
+## ✨ Key Features
+
+- **Dual-Engine Side-by-Side Evaluation**: Compare static Rules Engine policies directly against AI Agent reasoning with confidence scores and "AI Nuance" callouts.
+- **Autonomous Razorpay Integration**: Direct integration with Razorpay REST API for live payment link creation and payment status tracking.
+- **Real-Time Webhook Handler**: Ingests `payment.failed` webhooks from Razorpay with HMAC SHA256 signature verification.
+- **Delayed Retry Scheduler**: Manages delayed recovery actions and executes due actions via cron or manual triggers (`POST /actions/process-due`).
+- **Glassmorphic Pitch-Black UI**: Custom dark glassmorphic dashboard built with Next.js 15, Tailwind CSS, and custom typography (**ARBITER** brand title in *Kola*, dashboard in *Nippo*).
+
+---
+
+## 🛠️ Architecture & Tech Stack
 
 ```
-Frontend (Next.js) <-> Backend (FastAPI) <-> Supabase (Postgres)
+                               ┌─────────────────────────┐
+                               │   Razorpay Webhooks /   │
+                               │     Synthetic Events    │
+                               └────────────┬────────────┘
+                                            │
+                                            ▼
+┌────────────────────────┐      ┌─────────────────────────┐      ┌────────────────────────┐
+│  Next.js 15 Dashboard  │ ──── │     FastAPI Backend     │ ──── │  Supabase PostgreSQL   │
+│ (Glassmorphic + Nippo) │      │  (Python + Uvicorn)     │      │   + Execution Store    │
+└────────────────────────┘      └────────────┬────────────┘      └────────────────────────┘
+                                             │
+                                ┌────────────┴────────────┐
+                                │   AI Reasoning Agent    │
+                                │ (Google Gemini / Claude)│
+                                └─────────────────────────┘
 ```
 
-## Stack
+| Layer | Technology |
+|---|---|
+| **Frontend** | Next.js 15 (App Router), TypeScript, Tailwind CSS, Local Font Optimization |
+| **Backend** | FastAPI (Python 3.11+), Uvicorn, Pydantic |
+| **Database** | PostgreSQL via Supabase + Local JSON Execution Store Fallback |
+| **Payments** | Razorpay REST API (Payment Links & Webhooks) |
+| **AI Agent** | Google Gemini API / Anthropic Claude API |
 
-| Layer    | Tech                                      |
-|----------|-------------------------------------------|
-| Frontend | Next.js 14 (App Router) + TypeScript + Tailwind CSS |
-| Backend  | FastAPI (Python) + Uvicorn               |
-| Database | PostgreSQL via Supabase                   |
-| Webhooks | Razorpay webhook → FastAPI               |
-| AI       | Anthropic Claude (coming soon)            |
+---
 
-## Local Setup
+## 🚀 Getting Started
 
 ### Prerequisites
 
-- Node.js 18+
-- Python 3.11+
-- A Supabase project (free tier works)
+- **Node.js** 18+ & **npm**
+- **Python** 3.11+
+- **Razorpay** Test Account Key ID & Secret (`rzp_test_...`)
+- **Supabase** Database URL & Service Role Key
 
 ---
 
-### 1. Clone and enter the repo
+### 1. Environment Setup
 
-```bash
-git clone <your-repo-url>
-cd recovery-copilot
+#### Backend (`backend/.env`)
+Copy `backend/.env.example` to `backend/.env`:
+```env
+# Razorpay Test Credentials
+RAZORPAY_KEY_ID=rzp_test_xxxxxxxxx
+RAZORPAY_KEY_SECRET=xxxxxxxxx
+RAZORPAY_WEBHOOK_SECRET=xxxxxxxxx
+
+# Supabase Database
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGci...
+
+# AI Provider
+GEMINI_API_KEY=your_gemini_api_key
+```
+
+#### Frontend (`frontend/.env.local`)
+Copy `frontend/.env.local.example` to `frontend/.env.local`:
+```env
+NEXT_PUBLIC_API_URL=http://localhost:8000
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_xxxxxxxxx
 ```
 
 ---
 
-### 2. Backend
+### 2. Backend Installation & Run
 
 ```bash
 cd backend
 
-# Create and activate a virtual environment
+# Create virtual environment
 python -m venv .venv
-source .venv/bin/activate      # Windows: .venv\Scripts\activate
+
+# Activate virtual environment
+# Windows:
+.venv\Scripts\activate
+# Linux/macOS:
+source .venv/bin/activate
 
 # Install dependencies
 pip install -r requirements.txt
 
-# Copy and fill in env vars
-cp .env.example .env
-# Edit .env and fill in your real values
-
-# Run the dev server
-uvicorn main:app --reload
-# → http://localhost:8000
-# → http://localhost:8000/health  (should return {"status":"ok"})
+# Run FastAPI server
+uvicorn main:app --host 127.0.0.1 --port 8000 --reload
 ```
+API Documentation will be available at `http://localhost:8000/docs`.
 
 ---
 
-### 3. Frontend
+### 3. Frontend Installation & Run
 
 ```bash
 cd frontend
@@ -71,28 +128,33 @@ cd frontend
 # Install dependencies
 npm install
 
-# Copy and fill in env vars
-cp .env.local.example .env.local
-# Edit .env.local if your backend runs on a different port
-
-# Run the dev server
+# Run dev server
 npm run dev
-# → http://localhost:3000
 ```
+Dashboard will be live at `http://localhost:3000/dashboard` and Landing Page at `http://localhost:3000`.
 
 ---
 
-### 4. Database
+### 4. Database Setup
 
-Apply the schema to your Supabase project:
-
-1. Open your Supabase project → **SQL Editor**
-2. Paste the contents of `backend/db/schema.sql`
-3. Run — all four tables will be created
+1. Open your Supabase Project -> **SQL Editor**.
+2. Run the script in `backend/db/schema.sql` to create `payment_events`, `rules_evaluations`, `ai_evaluations`, and `recovery_actions` tables.
 
 ---
 
-## Deployment (coming soon)
+## 🔌 API Endpoints Summary
 
-- **Frontend** → Vercel (connect the `frontend/` directory)
-- **Backend** → Railway (connect the `backend/` directory, set env vars)
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/dashboard/summary` | Get total revenue recovered (with vs. without agent) and AI alignment counts |
+| `GET` | `/dashboard/events` | Get all payment events merged with execution store details |
+| `POST` | `/events/process-ai` | Run AI Reasoning Agent evaluation on unclassified events |
+| `POST` | `/actions/execute-pending` | Execute pending actions (e.g. create Razorpay payment links) |
+| `POST` | `/actions/process-due` | Execute due delayed actions (use `?force=true` for instant force) |
+| `POST` | `/webhooks/razorpay` | Handle live Razorpay `payment.failed` webhooks |
+
+---
+
+## 🛡️ License
+
+MIT License. Designed and developed for **Arbiter**.
