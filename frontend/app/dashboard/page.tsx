@@ -28,7 +28,7 @@ interface EventItem {
   action_taken: string; action_type: string;
   status: "recovered" | "pending" | "failed" | "no action taken";
   customer_email?: string; customer_phone?: string;
-  event_source?: "synthetic" | "razorpay_webhook";
+  event_source?: "synthetic" | "razorpay_webhook" | "razorpay_test_ping" | string;
   executed?: boolean; executed_at?: string;
   razorpay_payment_link_id?: string; razorpay_payment_link_url?: string;
   razorpay_short_url?: string; execution_error?: string;
